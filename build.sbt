@@ -24,7 +24,7 @@ crossScalaVersions := {
   }
 }
 
-javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
+// javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 
 //tag::spName[]
 spName := "yu-iskw/spark-streaming-pubsub-receiver"
@@ -129,13 +129,10 @@ def excludeJavaxServlet(items: Seq[ModuleID]) =
   excludeFromAll(items, "javax.servlet", "servlet-api")
 
 lazy val miniClusterDependencies = excludeJavaxServlet(Seq(
-  "org.apache.hadoop" % "hadoop-hdfs" % "2.6.4" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-common" % "2.6.4" % "compile,test" classifier "" classifier "tests" ,
-  "org.apache.hadoop" % "hadoop-client" % "2.6.4" % "compile,test" classifier "" classifier "tests" ,
-  "org.apache.hadoop" % "hadoop-mapreduce-client-jobclient" % "2.6.4" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-yarn-server-tests" % "2.6.4" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-yarn-server-web-proxy" % "2.6.4" % "compile,test" classifier "" classifier "tests",
-  "org.apache.hadoop" % "hadoop-minicluster" % "2.6.4"))
+  "com.google.apis" % "google-api-services-pubsub" % "v1-rev7-1.20.0",
+  "com.google.cloud" % "google-cloud-pubsub" % "0.9.4-alpha"
+
+))
 
 libraryDependencies ++= miniClusterDependencies
 
