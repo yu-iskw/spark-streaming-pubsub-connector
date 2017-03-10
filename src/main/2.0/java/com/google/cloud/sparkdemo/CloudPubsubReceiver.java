@@ -49,12 +49,23 @@ public class CloudPubsubReceiver extends Receiver<String> {
   private String projectFullName;
   private String topicFullName;
   private String subscriptionFullName;
+  private Boolean deleteAfter;
 
   public CloudPubsubReceiver(String projectName, String topicName, String subscriptionName) {
     super(StorageLevel.MEMORY_AND_DISK_2());
     this.projectFullName = "projects/" + projectName;
     this.topicFullName = projectFullName + "/topics/" + topicName;
     this.subscriptionFullName = projectFullName + "/subscriptions/" + subscriptionName;
+    this.deleteAfter = false;
+  }
+
+  public CloudPubsubReceiver(String projectName, String topicName, String subscriptionName,
+                             Boolean deleteAfter) {
+    super(StorageLevel.MEMORY_AND_DISK_2());
+    this.projectFullName = "projects/" + projectName;
+    this.topicFullName = projectFullName + "/topics/" + topicName;
+    this.subscriptionFullName = projectFullName + "/subscriptions/" + subscriptionName;
+    this.deleteAfter = deleteAfter;
   }
 
   public void onStart() {
@@ -88,7 +99,9 @@ public class CloudPubsubReceiver extends Receiver<String> {
     // Delete the subscription
     try {
       Pubsub client = createAuthorizedClient();
-      client.projects().subscriptions().delete(subscriptionFullName).execute();
+      if (this.deleteAfter) {
+        client.projects().subscriptions().delete(subscriptionFullName).execute();
+      }
     } catch (GoogleJsonResponseException e) {
       if (e.getDetails().getCode() == HttpURLConnection.HTTP_NOT_FOUND) {
         // Subscription may has already been deleted, but that's the expected behavior
